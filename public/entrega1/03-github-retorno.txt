@@ -1,0 +1,2 @@
+Homepage URL: https://trabalho-dhb.pages.dev
+Authorization callback URL: https://trabalho-dhb.pages.dev/oauth/callback/github
