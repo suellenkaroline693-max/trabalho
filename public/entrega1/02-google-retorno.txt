@@ -1,0 +1,1 @@
+https://trabalho-dhb.pages.dev/oauth/callback/google
