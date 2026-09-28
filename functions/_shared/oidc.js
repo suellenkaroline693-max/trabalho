@@ -35,6 +35,8 @@ function base64UrlToBytes(str) {
 // Valida o id_token (JWT) recebido do Google. Retorna o "payload" (dados da identidade)
 // ou lança um erro se algo estiver errado.
 export async function validateGoogleIdToken(idToken, expectedAudience, expectedNonce) {
+  const now = Math.floor(Date.now() / 1000);
+
   const parts = idToken.split(".");
   if (parts.length !== 3) {
     throw new Error("Formato de token inválido");
@@ -51,6 +53,12 @@ export async function validateGoogleIdToken(idToken, expectedAudience, expectedN
   const discovery = await getGoogleDiscovery();
   if (payload.iss !== discovery.issuer && payload.iss !== "https://accounts.google.com") {
     throw new Error("Emissor inválido");
+  }
+  if (payload.exp < now) {
+    throw new Error("Token expirado");
+  }
+  if (!payload.iat || payload.iat > now + 60) {
+    throw new Error("Data de emissão inválida");
   }
 
   const jwks = await getGoogleJwks(discovery.jwks_uri);
@@ -81,10 +89,6 @@ export async function validateGoogleIdToken(idToken, expectedAudience, expectedN
     throw new Error("Assinatura inválida");
   }
 
-  const now = Math.floor(Date.now() / 1000);
-  if (payload.exp < now) {
-    throw new Error("Token expirado");
-  }
   if (payload.aud !== expectedAudience) {
     throw new Error("Audiência inválida");
   }
