@@ -5,7 +5,7 @@ Critérios de aceitação
 - [x] o projeto foi publicado por integração com GitHub;
 - [ ] a equipe não instalou nem executou Node.js, npm, npx ou Wrangler;
 - [x] cada provedor usa uma URL de retorno própria e exata;
-- [ ] os pedidos de autorização usam código e PKCE S256;
+- [x] os pedidos de autorização usam código e PKCE S256;
 - [ ] a Function apresenta o Client Secret correto somente na troca de tokens;
 - [x] o retorno recusa uma transação ausente, expirada, alterada ou reutilizada;
 - [ ] o id_token do Google só produz uma sessão depois da validação criptográfica e semântica;
