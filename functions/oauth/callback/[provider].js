@@ -83,6 +83,15 @@ export async function onRequestGet(context) {
 
   const tokenData = await tokenResponse.json();
 
+  if (provider === "github") {
+    if (
+      !tokenData.access_token ||
+      String(tokenData.token_type).toLowerCase() !== "bearer"
+    ) {
+      return new Response("Falha ao trocar o código", { status: 400 });
+    }
+  }
+
   let issuer, subject, email, displayName;
 
   if (provider === "google") {
@@ -120,15 +129,24 @@ export async function onRequestGet(context) {
 
     // Revoga a autorização concedida à OAuth App
     const credentials = btoa(`${clientId}:${clientSecret}`);
-    await fetch(config.revokeEndpoint(clientId), {
+    const revokeResponse = await fetch(config.revokeEndpoint(clientId), {
       method: "DELETE",
       headers: {
         Authorization: `Basic ${credentials}`,
         Accept: "application/vnd.github+json",
         "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2026-03-10",
+        "User-Agent": "oauth-pages-lab",
       },
       body: JSON.stringify({ access_token: tokenData.access_token }),
     });
+
+    if (revokeResponse.status !== 204) {
+      return new Response(
+        `Falha ao revogar a autorização (status ${revokeResponse.status})`,
+        { status: 400 }
+      );
+    }
   }
 
   // Cria a sessão local
@@ -145,7 +163,7 @@ export async function onRequestGet(context) {
 
   return new Response(null, {
     status: 302,
-    headers: [
+    headers: [|
       ["Location", env.PUBLIC_BASE_URL],
       ["Set-Cookie", buildExpiredCookie("__Host-oauth-tx")],
       ["Set-Cookie", buildSessionCookie(sessionId)],
