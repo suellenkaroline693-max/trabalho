@@ -12,14 +12,14 @@ Caso 2: state alterado
 - Preparação: interceptação do redirecionamento de retorno do provedor, com modificação manual do valor do parâmetro state na URL antes de submeter ao endpoint de callback.
 - Pedido enviado: requisição de callback com o parâmetro state alterado em relação ao valor original gerado no início da transação.
 - Resultado esperado: a rota de retorno recusa a resposta antes de trocar o código.
-- Resultado observado: a validação do parâmetro state falhou ao comparar com o valor armazenado no cookie de transação, resultando na rejeição imediata da tentativa de autenticação (proteção contra CSRF confirmada).
+- Resultado observado: a comparação do parâmetro state com o valor conservado no D1 falhou e a rota de retorno recusou a tentativa antes de trocar o código, sem criar sessão.
 
 Caso 3: reutilização da transação
 
 - Preparação: cópia da URL de callback completa (com o parâmetro code) logo após a conclusão de um primeiro login bem-sucedido.
 - Pedido enviado: nova submissão da mesma URL de callback, reutilizando o código de autorização já consumido.
 - Resultado esperado: a transação já foi removida e a repetição deve falhar.
-- Resultado observado: o endpoint de callback respondeu com erro HTTP 400 (solicitação malformada/ilegal), confirmando o uso único (single-use) dos códigos de autorização e das transações.
+- Resultado observado: o endpoint de callback respondeu com HTTP 400, pois a transação já havia sido removida do D1 na primeira conclusão, confirmando que ela só pode ser usada uma vez.
 
 Caso 4: sessão expirada
 
@@ -30,12 +30,12 @@ Caso 4: sessão expirada
 
 Caso 5: origem inválida na saída
 
-- Preparação: sessão válida aberta em URL_BASE; abertura do console do navegador em uma página de origem externa (ex: americanas.com.br).
+- Preparação: sessão válida aberta em (https://trabalho-dhb.pages.dev); abertura do console do navegador em uma página de origem externa (ex: americanas.com.br).
 - Pedido enviado: requisição fetch do tipo POST enviada a partir da origem externa, direcionada ao endpoint /oauth/logout, com credentials: include.
 - Resultado esperado: a rota de logout deve recusar a operação.
-- Resultado observado: a requisição foi bloqueada pela verificação de origem do servidor e pela política de CORS do navegador, retornando HTTP 403 Forbidden (ERR_FAILED 403). A sessão original permaneceu válida.
-
- Caso 6: reutilização do cookie revogado
+- Resultado observado: a rota retornou HTTP 403 Forbidden por causa do cabeçalho Origin diferente de PUBLIC_BASE_URL (o console também exibiu ERR_FAILED por conta do CORS do navegador). Ao voltar à aba do site, a sessão original continuava válida.
+  
+Caso 6: reutilização do cookie revogado
 
 - Preparação: cópia do valor do cookie __Host-session enquanto a sessão estava ativa, através das Ferramentas do Desenvolvedor.
 - Pedido enviado: execução do logout normal, seguida da restauração manual do valor antigo do cookie __Host-session e nova consulta a /api/me.
