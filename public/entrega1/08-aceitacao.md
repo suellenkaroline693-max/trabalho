@@ -13,9 +13,9 @@ Critérios de aceitação
 - [x] o cookie de sessão é opaco, Secure, HttpOnly, SameSite=Strict e não possui Domain;
 - [x] o D1 guarda o resumo do cookie, não seu valor bruto;
 - [ ] /api/me devolve somente o perfil necessário;
-- [ ] o logout confere Origin, remove a sessão e expira o cookie;
+- [x] o logout confere Origin, remove a sessão e expira o cookie;
 - [x] um cookie revogado não restaura a sessão;
-- [ ] tokens e segredos não aparecem no HTML, nas URLs salvas, no armazenamento Web ou nos registros;
+- [x] tokens e segredos não aparecem no HTML, nas URLs salvas, no armazenamento Web ou nos registros;
 - [ ] a dupla consegue explicar por que os arquivos estáticos permanecem públicos;
 - [ ] as sessões administrativas foram encerradas no computador compartilhado.
 
