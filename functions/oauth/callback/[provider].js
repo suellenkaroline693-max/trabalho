@@ -163,7 +163,7 @@ export async function onRequestGet(context) {
 
   return new Response(null, {
     status: 302,
-    headers: [|
+    headers: [
       ["Location", env.PUBLIC_BASE_URL],
       ["Set-Cookie", buildExpiredCookie("__Host-oauth-tx")],
       ["Set-Cookie", buildSessionCookie(sessionId)],
