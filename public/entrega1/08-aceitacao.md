@@ -7,9 +7,9 @@ Critérios de aceitação
 - [x] cada provedor usa uma URL de retorno própria e exata;
 - [ ] os pedidos de autorização usam código e PKCE S256;
 - [ ] a Function apresenta o Client Secret correto somente na troca de tokens;
-- [ ] o retorno recusa uma transação ausente, expirada, alterada ou reutilizada;
+- [x] o retorno recusa uma transação ausente, expirada, alterada ou reutilizada;
 - [ ] o id_token do Google só produz uma sessão depois da validação criptográfica e semântica;
-- [ ] o access_token do GitHub é usado somente para consultar /user e a autorização é revogada antes da criação da sessão;
+- [x] o access_token do GitHub é usado somente para consultar /user e a autorização é revogada antes da criação da sessão;
 - [x] o cookie de sessão é opaco, Secure, HttpOnly, SameSite=Strict e não possui Domain;
 - [x] o D1 guarda o resumo do cookie, não seu valor bruto;
 - [ ] /api/me devolve somente o perfil necessário;
