@@ -2,12 +2,10 @@ name: revisao-ia
 on:
   pull_request:
     types: [opened, synchronize]
-permissions:  
+permissions:
   contents: read
   pull-requests: write
   models: read
-  contents: read
-  pull-requests: write
 jobs:
   revisar:
     runs-on: ubuntu-latest
