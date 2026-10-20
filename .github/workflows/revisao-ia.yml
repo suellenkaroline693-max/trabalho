@@ -5,7 +5,6 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  models: read
 jobs:
   revisar:
     runs-on: ubuntu-latest
@@ -28,7 +27,7 @@ jobs:
             echo '```'
           } > prompt.txt
       - id: ia
-            uses: actions/ai-inference@main
+        uses: actions/ai-inference@main
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}
         with:
